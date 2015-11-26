@@ -1,0 +1,20 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+   mavenCentral()
+   jcenter()
+}
+
+dependencies {
+   compile "org.restlet.jee:org.restlet:2.3.4"
+   compile "org.restlet.jee:org.restlet.ext.crypto:2.3.4"
+   compile "org.restlet.jee:org.restlet.ext.fileupload:2.3.4"
+   compile "org.restlet.jee:org.restlet.ext.jackson:2.3.4"
+   compile "org.restlet.jee:org.restlet.ext.servlet:2.3.4"
+   compile "org.restlet.jee:org.restlet.ext.slf4j:2.3.4"
+   compile "org.slf4j:slf4j-api:1.7.9"
+   compile "org.slf4j:slf4j-log4j12:1.7.9"
+   compile "io.netty:netty-all:5.0.0.Alpha2"
+}
+
