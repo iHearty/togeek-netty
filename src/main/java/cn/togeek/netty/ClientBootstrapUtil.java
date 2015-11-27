@@ -1,7 +1,6 @@
 package cn.togeek.netty;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -13,10 +12,8 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.timeout.IdleStateHandler;
 import cn.togeek.netty.handler.HeartbeatRequestHandler;
 import cn.togeek.netty.handler.TranspondHandler;
-import cn.togeek.netty.handler.UptimeClientHandler;
 
 public class ClientBootstrapUtil {
    public static void startService() throws Exception {
@@ -35,7 +32,7 @@ public class ClientBootstrapUtil {
                   p.addLast(new ObjectEncoder());
                   p.addLast(new StringDecoder());
 //                  p.addLast(new IdleStateHandler(3, 0, 0));
-                  p.addLast(new HeartbeatRequestHandler());
+//                  p.addLast(new HeartbeatRequestHandler());
 //                  p.addLast(new UptimeClientHandler());
                   p.addLast(new TranspondHandler());
                };

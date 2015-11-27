@@ -36,7 +36,7 @@ public class ServerBootstrapUtil {
                   ChannelPipeline p = ch.pipeline();
                   p.addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
                   p.addLast(new ObjectEncoder());
-                  p.addLast(new HeartbeatResponseHandler());
+//                  p.addLast(new HeartbeatResponseHandler());
                   p.addLast(new TranspondServerHandler());
                }
             });
