@@ -8,12 +8,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
-import io.netty.handler.codec.string.StringDecoder;
-import cn.togeek.netty.handler.HeartbeatRequestHandler;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import cn.togeek.netty.handler.TranspondHandler;
+import cn.togeek.netty.message.Transport;
 
 public class ClientBootstrapUtil {
    public static void startService() throws Exception {
@@ -27,10 +27,11 @@ public class ClientBootstrapUtil {
             .handler(new ChannelInitializer<SocketChannel>() {
                protected void initChannel(SocketChannel ch) throws Exception {
                   ChannelPipeline p = ch.pipeline();
-                  p.addLast(new ObjectDecoder(ClassResolvers
-                     .cacheDisabled(null)));
-                  p.addLast(new ObjectEncoder());
-                  p.addLast(new StringDecoder());
+                  p.addLast(new ProtobufVarint32FrameDecoder());
+                  p.addLast(new ProtobufDecoder(Transport.Transportor
+                     .getDefaultInstance()));
+                  p.addLast(new ProtobufVarint32LengthFieldPrepender());
+                  p.addLast(new ProtobufEncoder());
 //                  p.addLast(new IdleStateHandler(3, 0, 0));
 //                  p.addLast(new HeartbeatRequestHandler());
 //                  p.addLast(new UptimeClientHandler());

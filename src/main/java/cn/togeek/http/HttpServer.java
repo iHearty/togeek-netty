@@ -1,8 +1,6 @@
 package cn.togeek.http;
 
-import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import org.restlet.Application;
 import org.restlet.Component;
@@ -10,16 +8,14 @@ import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.Protocol;
-import org.restlet.data.Status;
-import org.restlet.ext.jackson.JacksonRepresentation;
-import org.restlet.resource.ServerResource;
 import org.restlet.routing.Router;
 
-import cn.togeek.netty.ServerBootstrapUtil;
-import cn.togeek.netty.message.Carrier;
-import cn.togeek.netty.message.CarrierWrapper;
-import cn.togeek.netty.message.TransferCenter;
-import cn.togeek.netty.util.TranspondUtil;
+import cn.togeek.netty.ServerBootstrapWrapper;
+import cn.togeek.netty.helper.LookupResponse;
+import cn.togeek.netty.helper.TranspondHelper;
+import cn.togeek.netty.helper.TransportorHelper;
+import cn.togeek.netty.message.Transport.TransportType;
+import cn.togeek.netty.message.Transport.Transportor;
 
 public class HttpServer {
    public static void main(String[] args) throws Exception {
@@ -30,7 +26,7 @@ public class HttpServer {
       component.getDefaultHost().attach("/http", server);
       component.start();
 
-      ServerBootstrapUtil.startService();
+      ServerBootstrapWrapper.startService();
    }
 
    public static class ServerApplication extends Application {
@@ -40,27 +36,13 @@ public class HttpServer {
          router.attach("/server", new Restlet() {
             public void handle(Request request, Response response) {
                try {
-                  CarrierWrapper carrierWrapper = new CarrierWrapper();
-                  CountDownLatch latch = carrierWrapper.getCountDownLatch();
-                  Carrier carrier = carrierWrapper.getCarrier();
-                  String v = request.getResourceRef().getQueryAsForm()
-                     .getFirstValue("a");
-                  carrier.setBody(Arrays.asList(v));
-                  System.out.println(v + " =============");
-                  TranspondUtil.transpond(carrier);
-                  TransferCenter.add(carrierWrapper.getCarrier().getUuid(),
-                     carrierWrapper);
-
+                  System.out.println("=============");
+                  Transportor transportor = TransportorHelper
+                     .getTransportor(request);
+                  CountDownLatch latch = LookupResponse.register(
+                     transportor.getTransportId(), response);
+                  TranspondHelper.transpond(1, transportor);
                   latch.await();
-
-//                  if(rs) {
-                     carrier = carrierWrapper.getCarrier();
-                     response.setEntity(new JacksonRepresentation<>(carrier
-                        .getBody()));
-//                  }
-//                  else {
-//                     response.setStatus(Status.CONNECTOR_ERROR_COMMUNICATION);
-//                  }
                }
                catch(Exception e) {
                   e.printStackTrace();

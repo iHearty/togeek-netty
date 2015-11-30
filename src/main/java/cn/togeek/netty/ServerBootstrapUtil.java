@@ -8,13 +8,14 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import cn.togeek.netty.handler.HeartbeatResponseHandler;
 import cn.togeek.netty.handler.TranspondServerHandler;
+import cn.togeek.netty.message.Transport;
 
 public class ServerBootstrapUtil {
    private static ServerBootstrap bootstrap;
@@ -26,17 +27,19 @@ public class ServerBootstrapUtil {
    public static void startService() throws Exception {
       try {
          bootstrap = new ServerBootstrap();
-         bootstrap.group(bGrp, wGrp)
-            .channel(NioServerSocketChannel.class)
+         bootstrap.group(bGrp, wGrp).channel(NioServerSocketChannel.class)
             .option(ChannelOption.SO_BACKLOG, 100)
             .handler(new LoggingHandler(LogLevel.INFO))
             .childHandler(new ChannelInitializer<SocketChannel>() {
                @Override
                public void initChannel(SocketChannel ch) {
                   ChannelPipeline p = ch.pipeline();
-                  p.addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
-                  p.addLast(new ObjectEncoder());
-//                  p.addLast(new HeartbeatResponseHandler());
+                  p.addLast(new ProtobufVarint32FrameDecoder());
+                  p.addLast(new ProtobufDecoder(Transport.Transportor
+                     .getDefaultInstance()));
+                  p.addLast(new ProtobufVarint32LengthFieldPrepender());
+                  p.addLast(new ProtobufEncoder());
+                  // p.addLast(new HeartbeatResponseHandler());
                   p.addLast(new TranspondServerHandler());
                }
             });
@@ -48,7 +51,7 @@ public class ServerBootstrapUtil {
          wGrp.shutdownGracefully();
       }
    }
-   
+
    public static void main(String[] args) throws Exception {
       startService();
    }
