@@ -18,7 +18,6 @@ public class TransportorHelper {
    public static Transportor getInitTransportor() {
       Entity.Builder ebuilder = Entity.newBuilder();
       Entity entity = ebuilder.setPayload(1 + "").build();
-
       Transportor.Builder tbuilder = Transportor.newBuilder();
       tbuilder.setType(TransportType.CHANNEL_INIT).setEntity(entity);
 
@@ -61,7 +60,7 @@ public class TransportorHelper {
 
       ref.setHostDomain("127.0.0.1");
       ref.setQuery(form.getQueryString());
-      
+
       return getTransportor(TransportType.DDX_REQ, ref.toString(), request
          .getMethod().getName(), request.getEntity());
    }
@@ -69,21 +68,19 @@ public class TransportorHelper {
    public static Transportor getTransportor(TransportType type, String url,
       String method, Representation msg) throws Exception
    {
-      url = "http://192.168.0.112:52500/powerMobileApp/config/features/zone/3";
-      
+      url = url.replaceAll("server", "client").replaceAll("52500", "9009");
       Entity.Builder ebuilder = Entity.newBuilder();
       ebuilder.setUrl(url).setMethod(method);
-System.out.println(msg.getClass() + " yyyyyyyyyyy");
-      
+
       if(msg != null && msg.getText() != null) {
          ebuilder.setPayload(msg.getText());
       }
-      
+
       Entity entity = ebuilder.build();
       String uuid = UUIDUtil.getUUID();
 
-      Engine.getLogger(TransportorHelper.class)
-         .log(Level.INFO, "生成请求ID: " + uuid);
+      Engine.getLogger(TransportorHelper.class).log(Level.INFO,
+         "生成请求ID: " + uuid);
 
       Transportor.Builder tbuilder = Transportor.newBuilder();
       tbuilder.setTransportId(uuid).setType(type).setEntity(entity);

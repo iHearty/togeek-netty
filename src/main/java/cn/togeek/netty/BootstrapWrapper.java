@@ -14,7 +14,9 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+
 import cn.togeek.netty.handler.TranspondHandler;
+import cn.togeek.netty.helper.ClientWriteHelper;
 import cn.togeek.netty.message.Transport;
 
 public class BootstrapWrapper {
@@ -60,7 +62,7 @@ public class BootstrapWrapper {
                p.addLast(new ProtobufVarint32LengthFieldPrepender());
                p.addLast(new ProtobufEncoder());
                // p.addLast(new IdleStateHandler(3, 0, 0));
-//                p.addLast(new HeartbeatRequestHandler());
+               // p.addLast(new HeartbeatRequestHandler());
                // p.addLast(new UptimeClientHandler());
 
                if(!forWrite) {
@@ -76,27 +78,26 @@ public class BootstrapWrapper {
       return bootstrap.connect("127.0.0.1", 8007);
    }
 
-   public static Channel getWriteChannel()
-      throws Exception
-   {
+   public static Channel getWriteChannel() throws Exception {
       Bootstrap bootstrap = getBootstrap(true);
       final Channel channel = doConnect(bootstrap).sync().channel();
-      
-      new Runnable() {
+
+      new Thread(new Runnable() {
          @Override
          public void run() {
             try {
                channel.closeFuture().sync();
             }
             catch(InterruptedException e) {
+               ClientWriteHelper.freeChannel();
                e.printStackTrace();
             }
          }
-      };
-      
+      }).start();
+
       return channel;
    }
-   
+
    public static void main(String[] args) throws Exception {
       startService();
    }

@@ -1,83 +1,47 @@
 package cn.togeek.netty.helper;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 import cn.togeek.netty.BootstrapWrapper;
-import cn.togeek.netty.WriteChannelWrapper;
 import cn.togeek.netty.message.Transport.Transportor;
 
 public class ClientWriteHelper {
-   private static int MAX_WRITE_CHANNEL = 64;
-
-   private static List<WriteChannelWrapper> writeChannels = new ArrayList<>();
-
-   private static Queue<Transportor> msgQueue = new LinkedList<>();
-
-   private static WriteReadyListener listener = new WriteReadyListener() {
-      @Override
-      public void ready() throws Exception {
-         if(msgQueue.isEmpty()) {
-            return;
-         }
-         
-         Object msg = msgQueue.poll();
-
-         if(msg == null) {
-            return;
-         }
-         
-         WriteChannelWrapper wc = takeWriteChannel();
-
-         if(wc == null) {
-            return;
-         }
-         
-         wc.write(msg);
-      }
-   };
+   private static Channel writeChannel = null;
 
    private ClientWriteHelper() {
    }
 
-   public static ChannelFuture transport(Transportor msg) throws Exception {
-      WriteChannelWrapper wc = takeWriteChannel();
-
-      if(wc == null) {
-         msgQueue.offer(msg);
-         return null;
+   public static void transport(Transportor msg) throws Exception {
+      System.out.println("XXXXXXXXXXXX " + writeChannel);
+      if(writeChannel == null || !writeChannel.isActive()) {
+         writeChannel = takeWriteChannel();
       }
 
-      return wc.writeAndFlush(msg);
+      writeChannel.eventLoop().execute(new TransportTask(writeChannel, msg));
+   }
+   
+   public static void freeChannel() {
+      writeChannel = null;
+   }
+   
+   private static Channel takeWriteChannel() throws Exception {
+      return BootstrapWrapper.getWriteChannel();
    }
 
-   private static WriteChannelWrapper takeWriteChannel() throws Exception {
-      for(WriteChannelWrapper writeChannel : writeChannels) {
-         if(!writeChannel.channel().isActive()) {
-            writeChannels.remove(writeChannel);
-            continue;
-         }
+   private static class TransportTask implements Runnable {
+      private Transportor msg;
 
-         if(!writeChannel.isWriting()) {
-            return writeChannel;
-         }
+      private Channel channel;
+
+      public TransportTask(Channel channel, Transportor msg) {
+         this.channel = channel;
+         this.msg = msg;
       }
 
-      if(writeChannels.size() >= MAX_WRITE_CHANNEL) {
-         return null;
+      @Override
+      public void run() {
+         System.out.println("AAA --> " + channel.isActive());
+         channel.writeAndFlush(msg);
       }
-
-      
-      Channel channel = BootstrapWrapper.getWriteChannel();
-      WriteChannelWrapper writeChannel = new WriteChannelWrapper(channel);
-      writeChannel.addListener(listener);
-      writeChannels.add(writeChannel);
-
-      return writeChannel;
    }
 }
