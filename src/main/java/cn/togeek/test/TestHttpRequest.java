@@ -16,9 +16,10 @@ public class TestHttpRequest {
          new Thread(new Runnable() {
             @Override
             public void run() {
-               String url = "http://localhost:9009/http/server?index=" + idx + "&sleep=0&timestamp=";
-//               url += random.nextInt(4);
+               String url = "http://localhost:9009/http/server?index=" + idx + "&timestamp=";
                url += Math.random();
+//               url += "&sleep=0" + random.nextInt(4);
+               
                System.out.println("URL = " + url);
                final Context context = new Context();
                ClientResource resource = new ClientResource(context, url);
@@ -26,7 +27,7 @@ public class TestHttpRequest {
                Representation rep = resource.get();
                
                try {
-                  System.out.println("开始时间:" + t1 + 
+                  System.out.println(idx + " 开始时间:" + t1 + 
                      ", 用时:" + (System.currentTimeMillis() - t1) +
                      ", 结果:" + rep.getText());
                }

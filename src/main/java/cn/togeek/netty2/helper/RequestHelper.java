@@ -1,4 +1,4 @@
-package cn.togeek.netty.helper;
+package cn.togeek.netty2.helper;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

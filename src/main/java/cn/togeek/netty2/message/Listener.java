@@ -1,4 +1,4 @@
-package cn.togeek.netty2;
+package cn.togeek.netty2.message;
 
 import org.restlet.Response;
 

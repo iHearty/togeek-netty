@@ -1,9 +1,9 @@
-package cn.togeek.netty.helper;
+package cn.togeek.netty2.helper;
 
 import io.netty.channel.Channel;
 
-import cn.togeek.netty.BootstrapWrapper;
 import cn.togeek.netty.message.Transport.Transportor;
+import cn.togeek.netty2.BootstrapWrapper;
 
 public class ClientWriteHelper {
    private static Channel writeChannel = null;
@@ -12,7 +12,6 @@ public class ClientWriteHelper {
    }
 
    public static void transport(Transportor msg) throws Exception {
-      System.out.println("XXXXXXXXXXXX " + writeChannel);
       if(writeChannel == null || !writeChannel.isActive()) {
          writeChannel = takeWriteChannel();
       }
@@ -40,7 +39,6 @@ public class ClientWriteHelper {
 
       @Override
       public void run() {
-         System.out.println("AAA --> " + channel.isActive());
          channel.writeAndFlush(msg);
       }
    }

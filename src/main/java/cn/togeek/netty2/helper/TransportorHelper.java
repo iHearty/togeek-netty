@@ -1,15 +1,12 @@
-package cn.togeek.netty.helper;
+package cn.togeek.netty2.helper;
 
 import java.util.List;
-import java.util.logging.Level;
 
 import org.restlet.Request;
 import org.restlet.data.Form;
 import org.restlet.data.Reference;
-import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
 
-import cn.garden.util.UUIDUtil;
 import cn.togeek.netty.message.Transport.Entity;
 import cn.togeek.netty.message.Transport.TransportType;
 import cn.togeek.netty.message.Transport.Transportor;
@@ -58,7 +55,7 @@ public class TransportorHelper {
          ref.setHostPort(52500);
       }
 
-      ref.setHostDomain("127.0.0.1");
+      ref.setHostDomain("192.168.0.95");
       ref.setQuery(form.getQueryString());
 
       return getTransportor(TransportType.DDX_REQ, ref.toString(), request
@@ -68,7 +65,6 @@ public class TransportorHelper {
    public static Transportor getTransportor(TransportType type, String url,
       String method, Representation msg) throws Exception
    {
-      url = url.replaceAll("server", "client").replaceAll("52500", "9009");
       Entity.Builder ebuilder = Entity.newBuilder();
       ebuilder.setUrl(url).setMethod(method);
 
@@ -77,13 +73,8 @@ public class TransportorHelper {
       }
 
       Entity entity = ebuilder.build();
-      String uuid = UUIDUtil.getUUID();
-
-      Engine.getLogger(TransportorHelper.class).log(Level.INFO,
-         "生成请求ID: " + uuid);
-
       Transportor.Builder tbuilder = Transportor.newBuilder();
-      tbuilder.setTransportId(uuid).setType(type).setEntity(entity);
+      tbuilder.setType(type).setEntity(entity);
 
       return tbuilder.build();
    }

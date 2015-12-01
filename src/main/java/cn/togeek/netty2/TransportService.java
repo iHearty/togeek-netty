@@ -6,15 +6,18 @@ import org.restlet.Request;
 import org.restlet.Response;
 
 import cn.garden.util.UUIDUtil;
-import cn.togeek.netty.helper.ServerTranspondHelper;
-import cn.togeek.netty.message.Transport.Entity;
-import cn.togeek.netty.message.Transport.TransportType;
+
 import cn.togeek.netty.message.Transport.Transportor;
+import cn.togeek.netty2.helper.ServerTranspondHelper;
+import cn.togeek.netty2.helper.TransportorHelper;
+import cn.togeek.netty2.message.Listener;
 
 public class TransportService {
    final ConcurrentHashMap<String, RequestHolder<Response>> clientHandlers = new ConcurrentHashMap<>();
 
-   public void sendRequest(Request request, Listener<Response> listener) {
+   public void sendRequest(Request request, Listener<Response> listener)
+      throws Exception
+   {
       // 1. 生成request id
       String requestId = UUIDUtil.getUUID();
 
@@ -26,13 +29,8 @@ public class TransportService {
       // int plantId = ((PlantUser) user).getPlantId();
       int plantId = 1;
 
-      Entity.Builder ebuilder = Entity.newBuilder();
-      ebuilder.setUrl("http://127.0.0.1:9009/http/client").setMethod("GET");
-      ebuilder.setPayload("server");
-      Entity entity = ebuilder.build();
-      Transportor.Builder tbuilder = Transportor.newBuilder();
-      tbuilder.setTransportId(requestId).setType(TransportType.DDX_REQ)
-         .setEntity(entity);
+      Transportor.Builder tbuilder = TransportorHelper.getTransportor(request)
+         .toBuilder().setTransportId(requestId);
       ServerTranspondHelper.transpond(plantId, tbuilder.build());
    }
 

@@ -1,12 +1,13 @@
-package cn.togeek.netty.handler;
+package cn.togeek.netty2.handler;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import cn.togeek.netty.helper.RequestHelper;
-import cn.togeek.netty.helper.TransportorHelper;
+
 import cn.togeek.netty.message.Transport.Entity;
 import cn.togeek.netty.message.Transport.TransportType;
 import cn.togeek.netty.message.Transport.Transportor;
+import cn.togeek.netty2.helper.RequestHelper;
+import cn.togeek.netty2.helper.TransportorHelper;
 
 public class TranspondHandler extends ChannelHandlerAdapter {
    @Override

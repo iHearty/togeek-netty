@@ -1,4 +1,4 @@
-package cn.togeek.netty.handler;
+package cn.togeek.netty2.handler;
 
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerAdapter;
