@@ -25,7 +25,10 @@ public class HttpServer {
       component.getDefaultHost().attach("/http", server);
       component.start();
 
-      ServerBootstrapWrapper.startService();
+      Settings settings = Settings.builder().put("comm.server.host", "0.0.0.0")
+         .put("comm.server.port", 52400).put("comm.this.plantid", 1).build();
+
+      NettyServerTransport.start(settings);
    }
 
    public static class ServerApplication extends Application {
