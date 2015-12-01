@@ -12,9 +12,10 @@ import cn.togeek.netty.message.Transport.Transportor;
 public class HeartbeatRequestHandler extends ChannelHandlerAdapter {
    @Override
    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+      super.channelActive(ctx);
+
       ctx.writeAndFlush(TransportorHelper
          .getTransportor(TransportType.HEARTBEAT_REQ));
-      super.channelActive(ctx);
    }
 
    @Override
@@ -24,8 +25,7 @@ public class HeartbeatRequestHandler extends ChannelHandlerAdapter {
       if((msg instanceof Transportor)
          && ((Transportor) msg).getType() == TransportType.HEARTBEAT_RES)
       {
-         ctx.executor().schedule(new HeartbeatTask(ctx), 20000,
-            TimeUnit.MILLISECONDS);
+         ctx.executor().schedule(new HeartbeatTask(ctx), 30, TimeUnit.SECONDS);
          return;
       }
 

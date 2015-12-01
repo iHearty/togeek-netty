@@ -1,9 +1,5 @@
 package cn.togeek.netty;
 
-import cn.togeek.netty.handler.TranspondHandler;
-import cn.togeek.netty.helper.ClientWriteHelper;
-import cn.togeek.netty.message.Transport;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -18,6 +14,15 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import io.netty.handler.timeout.IdleStateHandler;
+
+import java.util.concurrent.TimeUnit;
+
+import cn.togeek.netty.handler.HeartbeatRequestHandler;
+import cn.togeek.netty.handler.TranspondHandler;
+import cn.togeek.netty.handler.UptimeClientHandler;
+import cn.togeek.netty.helper.ClientWriteHelper;
+import cn.togeek.netty.message.Transport;
 
 public class BootstrapWrapper {
    private static Channel sChannel = null;
@@ -37,6 +42,19 @@ public class BootstrapWrapper {
       finally {
          grp.shutdownGracefully();
          sChannel = null;
+         
+         // restart service
+         grp.schedule(new Runnable() {
+            @Override
+            public void run() {
+               try {
+                  startService();
+               }
+               catch(Exception e) {
+                  e.printStackTrace();
+               }
+            }
+         }, 60, TimeUnit.SECONDS);
       }
    }
 
@@ -62,9 +80,9 @@ public class BootstrapWrapper {
                      .getDefaultInstance()));
                   p.addLast(new ProtobufVarint32LengthFieldPrepender());
                   p.addLast(new ProtobufEncoder());
-                  // p.addLast(new IdleStateHandler(3, 0, 0));
-                  // p.addLast(new HeartbeatRequestHandler());
-                  // p.addLast(new UptimeClientHandler());
+                   p.addLast(new IdleStateHandler(60, 0, 0));
+                   p.addLast(new HeartbeatRequestHandler());
+                   p.addLast(new UptimeClientHandler());
 
                   if(!forWrite) {
                      p.addLast(new TranspondHandler());

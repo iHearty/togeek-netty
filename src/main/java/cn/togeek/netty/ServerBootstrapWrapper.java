@@ -1,8 +1,5 @@
 package cn.togeek.netty;
 
-import cn.togeek.netty.handler.TranspondServerHandler;
-import cn.togeek.netty.message.Transport;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -18,6 +15,10 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+
+import cn.togeek.netty.handler.HeartbeatResponseHandler;
+import cn.togeek.netty.handler.TranspondServerHandler;
+import cn.togeek.netty.message.Transport;
 
 public class ServerBootstrapWrapper {
    private static Channel ssChannel = null;
@@ -48,7 +49,7 @@ public class ServerBootstrapWrapper {
                         .getDefaultInstance()));
                      p.addLast(new ProtobufVarint32LengthFieldPrepender());
                      p.addLast(new ProtobufEncoder());
-                     // p.addLast(new HeartbeatResponseHandler());
+                      p.addLast(new HeartbeatResponseHandler());
                      p.addLast(new TranspondServerHandler());
                   }
                });
