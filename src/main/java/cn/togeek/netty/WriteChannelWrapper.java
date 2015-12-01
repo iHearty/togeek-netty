@@ -53,7 +53,11 @@ public class WriteChannelWrapper {
 
       return cf;
    }
-
+   
+   public Channel flush() {
+      return channel.flush();
+   }
+   
    public ChannelFuture writeAndFlush(Object msg) throws Exception {
       return writeAndFlush(msg, channel.newPromise());
    }

@@ -6,6 +6,7 @@ import java.util.concurrent.CountDownLatch;
 
 import org.restlet.Response;
 import org.restlet.ext.jackson.JacksonRepresentation;
+import org.restlet.ext.servlet.ServletUtils;
 
 import cn.togeek.netty.message.Transport.Entity;
 import cn.togeek.netty.message.Transport.Transportor;
@@ -25,7 +26,7 @@ public class LookupResponse {
 
    public static void responseComplete(Transportor transportor) {
       String uuid = transportor.getTransportId();
-      ResonseWrapper resWrapper = lookups.get(uuid);
+      ResonseWrapper resWrapper = lookups.remove(uuid);
       
       if(resWrapper == null) {
          return;
