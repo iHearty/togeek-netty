@@ -3,8 +3,11 @@ apply plugin: 'eclipse'
 apply plugin: 'war'
 
 repositories {
-   mavenCentral()
    jcenter()
+
+   maven {
+      url "http://115.28.148.171:8081/nexus/content/groups/public/"
+   }
 }
 
 dependencies {
@@ -17,4 +20,11 @@ dependencies {
    compile "org.slf4j:slf4j-api:1.7.9"
    compile "org.slf4j:slf4j-log4j12:1.7.9"
    compile "com.google.protobuf:protobuf-java:2.5.0"
+   compile "garden.restlet:garden-util:4.2-SNAPSHOT"
+
+   providedCompile "io.netty:netty-all:5.0.0.Alpha2"
+}
+
+compileJava {
+   options.encoding = "UTF-8"
 }
