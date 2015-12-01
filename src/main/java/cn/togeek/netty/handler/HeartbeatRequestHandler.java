@@ -1,13 +1,13 @@
-package cn.togeek.netty2.handler;
+package cn.togeek.netty.handler;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.concurrent.TimeUnit;
 
+import cn.togeek.netty.helper.TransportorHelper;
 import cn.togeek.netty.message.Transport.TransportType;
 import cn.togeek.netty.message.Transport.Transportor;
-import cn.togeek.netty2.helper.TransportorHelper;
 
 public class HeartbeatRequestHandler extends ChannelHandlerAdapter {
    @Override

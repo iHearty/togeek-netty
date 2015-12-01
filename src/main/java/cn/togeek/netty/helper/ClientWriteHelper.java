@@ -1,9 +1,9 @@
-package cn.togeek.netty2.helper;
+package cn.togeek.netty.helper;
 
 import io.netty.channel.Channel;
 
+import cn.togeek.netty.BootstrapWrapper;
 import cn.togeek.netty.message.Transport.Transportor;
-import cn.togeek.netty2.BootstrapWrapper;
 
 public class ClientWriteHelper {
    private static Channel writeChannel = null;

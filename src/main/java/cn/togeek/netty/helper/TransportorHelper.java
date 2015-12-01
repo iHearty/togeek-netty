@@ -1,4 +1,4 @@
-package cn.togeek.netty2.helper;
+package cn.togeek.netty.helper;
 
 import java.util.List;
 

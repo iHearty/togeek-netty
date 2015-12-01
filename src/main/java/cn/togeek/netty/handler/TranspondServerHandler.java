@@ -1,9 +1,9 @@
-package cn.togeek.netty2.handler;
+package cn.togeek.netty.handler;
 
+import cn.togeek.netty.HttpServer;
+import cn.togeek.netty.helper.ServerTranspondHelper;
 import cn.togeek.netty.message.Transport.TransportType;
 import cn.togeek.netty.message.Transport.Transportor;
-import cn.togeek.netty2.HttpServer;
-import cn.togeek.netty2.helper.ServerTranspondHelper;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;

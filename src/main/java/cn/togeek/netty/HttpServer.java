@@ -1,4 +1,4 @@
-package cn.togeek.netty2;
+package cn.togeek.netty;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -12,7 +12,7 @@ import org.restlet.data.Protocol;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.routing.Router;
 
-import cn.togeek.netty2.message.Listener;
+import cn.togeek.netty.message.Listener;
 
 public class HttpServer {
    public final static TransportService service = new TransportService();
