@@ -7,7 +7,6 @@ import org.restlet.Request;
 import org.restlet.data.Form;
 import org.restlet.data.Reference;
 import org.restlet.engine.Engine;
-import org.restlet.representation.EmptyRepresentation;
 import org.restlet.representation.Representation;
 
 import cn.garden.util.UUIDUtil;

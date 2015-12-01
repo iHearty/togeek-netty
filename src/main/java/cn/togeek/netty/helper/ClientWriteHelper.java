@@ -47,7 +47,7 @@ public class ClientWriteHelper {
 
    public static ChannelFuture transport(Transportor msg) throws Exception {
       WriteChannelWrapper wc = takeWriteChannel();
-System.out.println("ClientWriteHelper ->" + wc + " " + System.identityHashCode(wc.channel()));
+
       if(wc == null) {
          msgQueue.offer(msg);
          return null;

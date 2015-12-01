@@ -18,14 +18,14 @@ public class TranspondHandler extends ChannelHandlerAdapter {
    public void channelRead(final ChannelHandlerContext ctx, final Object msg)
       throws Exception
    {
-System.out.println("Client TranspondHandler -> " + msg);
+
       if(!(msg instanceof Transportor)
          || ((Transportor) msg).getType() != TransportType.DDX_REQ)
       {
          super.channelRead(ctx, msg);
          return;
       }
-      System.out.println("isValid -> " + isValid((Transportor) msg));  
+
       if(!isValid((Transportor) msg)) {
          return;
       }
