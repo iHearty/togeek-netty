@@ -1,16 +1,15 @@
 package cn.togeek.netty.helper;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelId;
-import io.netty.channel.group.ChannelMatcher;
-import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.util.concurrent.GlobalEventExecutor;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import cn.togeek.netty.message.Transport.Transportor;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelId;
+import io.netty.channel.group.ChannelMatcher;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.util.concurrent.GlobalEventExecutor;
 
 public class ServerTranspondHelper {
    private static Map<Integer, ChannelId> channels = new HashMap<>();
@@ -41,13 +40,13 @@ public class ServerTranspondHelper {
             if(plantId == null) {
                return true;
             }
-            
+
             ChannelId cid = channels.get(plantId);
-            
+
             if(cid == null) {
                return false;
             }
-            
+
             return channel.id().equals(cid);
          }
       });
