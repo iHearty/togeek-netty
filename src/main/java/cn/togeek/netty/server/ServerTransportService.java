@@ -9,8 +9,8 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class ServerTransportService
-   extends AbstractTransportService<ServerBootstrap> {
+public class ServerTransportService extends
+   AbstractTransportService<ServerBootstrap> {
 
    public static final ServerTransportService INSTANCE =
       new ServerTransportService();
@@ -29,7 +29,8 @@ public class ServerTransportService
       boosGroup = new NioEventLoopGroup(1);
       workGroup = new NioEventLoopGroup();
       options(settings).group(boosGroup, workGroup)
-         .channel(NioServerSocketChannel.class).handler(new ServerInitializer())
+         .channel(NioServerSocketChannel.class)
+         .handler(new ServerInitializer())
          .childHandler(new ServerChildInitializer(transport));
    }
 
