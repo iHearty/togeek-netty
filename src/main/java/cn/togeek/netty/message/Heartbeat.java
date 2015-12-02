@@ -1,13 +1,13 @@
 package cn.togeek.netty.message;
 
 public class Heartbeat {
-   public static final int TYPE_REQ = 1;
+   private static final int TYPE_REQ = 1;
 
-   public static final int TYPE_RES = 2;
+   private static final int TYPE_RES = 2;
 
-   public static Heartbeat REQ = new Heartbeat(TYPE_REQ);
+   public static final Heartbeat REQ = new Heartbeat(TYPE_REQ);
 
-   public static Heartbeat RES = new Heartbeat(TYPE_RES);
+   public static final Heartbeat RES = new Heartbeat(TYPE_RES);
 
    private int type = 1;
 
