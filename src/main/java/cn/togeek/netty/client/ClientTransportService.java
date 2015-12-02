@@ -1,9 +1,5 @@
 package cn.togeek.netty.client;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
-
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,38 +8,35 @@ import java.util.concurrent.TimeUnit;
 import cn.togeek.netty.AbstractTransportService;
 import cn.togeek.netty.Settings;
 import cn.togeek.netty.SettingsException;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
-public class ClientTransportService extends AbstractTransportService<Bootstrap> {
+public class ClientTransportService
+   extends AbstractTransportService<Bootstrap> {
    public static final ClientTransportService INSTANCE =
       new ClientTransportService();
 
-   private ScheduledExecutorService scheduleExecutor = Executors
-      .newScheduledThreadPool(1);
-
-   private Bootstrap bootstrap;
+   private ScheduledExecutorService scheduleExecutor =
+      Executors.newScheduledThreadPool(1);
 
    private NioEventLoopGroup workGroup;
 
    private ClientTransportService() {
-      bootstrap = new Bootstrap();
-   }
+      super();
 
-   @Override
-   protected Bootstrap getBootstrap() {
-      return bootstrap;
+      this.bootstrap = new Bootstrap();
    }
 
    @Override
    protected void init(Settings settings) throws SettingsException {
-      super.init(settings);
-
       workGroup = new NioEventLoopGroup();
-      bootstrap.group(workGroup).channel(NioSocketChannel.class)
-         .handler(new ClientInitializer());
+      options(settings).group(workGroup).channel(NioSocketChannel.class)
+         .handler(new ClientInitializer(transport));
    }
 
    @Override
-   public void startService(final Settings settings) throws Exception {
+   public void start(final Settings settings) throws Exception {
       String host = settings.get("comm.server.host");
       int port = settings.getAsInt("comm.server.port", 52400);
 
@@ -52,8 +45,8 @@ public class ClientTransportService extends AbstractTransportService<Bootstrap> 
             .closeFuture().sync();
       }
       catch(Exception e) {
-         throw new RuntimeException("Failed to connect to [" + host + ", "
-            + port + "]", e);
+         throw new RuntimeException(
+            "Failed to connect to [" + host + ", " + port + "]", e);
       }
       finally {
          workGroup.shutdownGracefully();
@@ -62,7 +55,7 @@ public class ClientTransportService extends AbstractTransportService<Bootstrap> 
             @Override
             public void run() {
                try {
-                  startService(settings);
+                  start(settings);
                }
                catch(Exception e) {
                   e.printStackTrace();

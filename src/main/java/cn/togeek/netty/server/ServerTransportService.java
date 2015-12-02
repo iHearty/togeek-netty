@@ -1,50 +1,41 @@
 package cn.togeek.netty.server;
 
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-
 import java.net.InetSocketAddress;
 
 import cn.togeek.netty.AbstractTransportService;
 import cn.togeek.netty.Settings;
 import cn.togeek.netty.SettingsException;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class ServerTransportService extends
-   AbstractTransportService<ServerBootstrap> {
+public class ServerTransportService
+   extends AbstractTransportService<ServerBootstrap> {
 
    public static final ServerTransportService INSTANCE =
       new ServerTransportService();
-
-   private ServerBootstrap bootstrap;
 
    private NioEventLoopGroup boosGroup;
 
    private NioEventLoopGroup workGroup;
 
    private ServerTransportService() {
-      bootstrap = new ServerBootstrap();
-   }
+      super();
 
-   @Override
-   protected ServerBootstrap getBootstrap() {
-      return bootstrap;
+      this.bootstrap = new ServerBootstrap();
    }
 
    @Override
    protected void init(Settings settings) throws SettingsException {
-      super.init(settings);
-
       boosGroup = new NioEventLoopGroup(1);
       workGroup = new NioEventLoopGroup();
-      bootstrap.group(boosGroup, workGroup)
-         .channel(NioServerSocketChannel.class)
-         .handler(new ServerInitializer())
-         .childHandler(new ServerChildInitializer());;
+      options(settings).group(boosGroup, workGroup)
+         .channel(NioServerSocketChannel.class).handler(new ServerInitializer())
+         .childHandler(new ServerChildInitializer(transport));
    }
 
    @Override
-   public void startService(Settings settings) throws SettingsException {
+   public void start(Settings settings) throws SettingsException {
       init(settings);
 
       String host = settings.get("comm.server.host");

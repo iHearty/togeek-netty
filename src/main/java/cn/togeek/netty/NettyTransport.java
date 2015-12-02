@@ -27,7 +27,7 @@ public class NettyTransport {
             .put("comm.server.port", 52400).put("comm.this.plantid", 1)
             .put("TCP_NODELAY", true).put("SO_KEEPALIVE", true)
             .put("SO_BACKLOG", 100).build();
-      ClientTransportService.INSTANCE.startService(settings);
+      ClientTransportService.INSTANCE.start(settings);
    }
 
    private final ChildChannelGroup channels = new ChildChannelGroup(

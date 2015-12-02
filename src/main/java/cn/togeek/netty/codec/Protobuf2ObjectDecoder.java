@@ -1,9 +1,5 @@
 package cn.togeek.netty.codec;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.protobuf.ProtobufDecoder;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +9,13 @@ import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.MessageLite;
 
 import cn.togeek.netty.message.Transport.Transportor;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
 
 public class Protobuf2ObjectDecoder extends ProtobufDecoder {
-   private ObjectMapper jm = new ObjectMapper();
-   
+   private ObjectMapper mapper = new ObjectMapper();
+
    public Protobuf2ObjectDecoder(MessageLite prototype) {
       super(prototype);
    }
@@ -32,23 +31,23 @@ public class Protobuf2ObjectDecoder extends ProtobufDecoder {
    {
       super(prototype, extensionRegistry);
    }
-   
+
    @Override
    protected void decode(ChannelHandlerContext ctx, ByteBuf msg,
       List<Object> out) throws Exception
    {
       super.decode(ctx, msg, out);
-      
+
       List<Object> list = new ArrayList<>();
-      
+
       for(Object obj : out) {
          if(obj instanceof Transportor) {
             Transportor transportor = (Transportor) obj;
             String clz = transportor.getClazz();
-            
+
             try {
                Class<?> cls = Class.forName(clz);
-               Object nobj = jm.readValue(transportor.getJson(), cls);
+               Object nobj = mapper.readValue(transportor.getJson(), cls);
                list.add(nobj);
             }
             catch(Exception ex) {
@@ -56,7 +55,7 @@ public class Protobuf2ObjectDecoder extends ProtobufDecoder {
             }
          }
       }
-      
+
       out.clear();
       out.addAll(list);
    }

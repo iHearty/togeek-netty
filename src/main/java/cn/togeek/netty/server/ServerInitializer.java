@@ -12,5 +12,4 @@ public class ServerInitializer extends ChannelInitializer<ServerSocketChannel> {
       ChannelPipeline pipeline = ch.pipeline();
       pipeline.addLast(new LoggingHandler(LogLevel.INFO));
    }
-
 }

@@ -35,7 +35,7 @@ public class HttpServer {
       component.getDefaultHost().attach("/http", server);
       component.start();
 
-      ServerTransportService.INSTANCE.startService(settings);
+      ServerTransportService.INSTANCE.start(settings);
    }
 
    public static class ServerApplication extends Application {
