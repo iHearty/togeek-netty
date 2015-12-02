@@ -15,25 +15,35 @@ import org.restlet.routing.Router;
 import cn.togeek.netty.message.Listener;
 
 public class HttpServer {
-   public final static TransportService service = new TransportService();
-
    public static void main(String[] args) throws Exception {
-      Component component = new Component();
-      component.getServers().add(Protocol.HTTP, 9009);
-      ServerApplication server = new ServerApplication();
+      new HttpServer();
+   }
 
-      component.getDefaultHost().attach("/http", server);
-      component.start();
-
+   HttpServer() throws Exception {
       Settings settings = Settings.builder().put("comm.server.host", "0.0.0.0")
          .put("comm.server.port", 52400).put("comm.this.plantid", 1).put(
             "TCP_NODELAY", true).put("SO_KEEPALIVE", true).put("SO_BACKLOG",
                100).build();
 
-      NettyServerTransport.start(settings);
+      NettyServerTransport transport = new NettyServerTransport();
+
+      Component component = new Component();
+      component.getServers().add(Protocol.HTTP, 9009);
+      ServerApplication server = new ServerApplication(transport);
+
+      component.getDefaultHost().attach("/http", server);
+      component.start();
+
+      transport.start(settings);
    }
 
    public static class ServerApplication extends Application {
+      private NettyServerTransport transport;
+
+      ServerApplication(NettyServerTransport transport) {
+         this.transport = transport;
+      }
+
       @Override
       public Restlet createInboundRoot() {
          Router router = new Router();
@@ -43,7 +53,7 @@ public class HttpServer {
                final CountDownLatch latch = new CountDownLatch(1);
 
                try {
-                  service.sendRequest(request, new Listener<Response>() {
+                  transport.sendRequest(request, new Listener<Response>() {
                      @Override
                      public void onResponse(String entity) {
                         response.setEntity(new StringRepresentation(entity));

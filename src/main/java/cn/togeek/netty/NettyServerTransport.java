@@ -1,16 +1,27 @@
 package cn.togeek.netty;
 
 import java.net.InetSocketAddress;
+import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
+import org.restlet.Request;
+import org.restlet.Response;
 import org.restlet.engine.util.StringUtils;
 
+import cn.garden.util.UUIDUtil;
 import cn.togeek.netty.handler.HeartbeatResponseHandler;
-import cn.togeek.netty.handler.TranspondServerHandler;
+import cn.togeek.netty.handler.TransportMessageHandler;
+import cn.togeek.netty.helper.TransportorHelper;
+import cn.togeek.netty.message.Listener;
 import cn.togeek.netty.message.Transport;
+import cn.togeek.netty.message.Transport.Transportor;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
@@ -21,9 +32,49 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.EventExecutor;
+import io.netty.util.concurrent.GlobalEventExecutor;
+import io.netty.util.internal.PlatformDependent;
 
 public class NettyServerTransport {
-   public static void start(Settings settings) throws SettingsException {
+   private final ChildChannelGroup channels = new ChildChannelGroup(
+      GlobalEventExecutor.INSTANCE);
+
+   private final ConcurrentMap<String, RequestHolder<Response>> handlers = PlatformDependent
+      .newConcurrentHashMap();
+
+   public void addChildChannel(int plantId, Channel channel) {
+      channels.add(plantId, channel);
+   }
+
+   public void removeChildChannel(Channel channel) {
+      channels.remove(channel);
+   }
+
+   public void sendRequest(Request request, Listener<Response> listener)
+      throws Exception {
+      // 1. 生成request id
+      String requestId = UUIDUtil.getUUID();
+
+      // 2. 将requestId放入map
+      handlers.put(requestId, new RequestHolder<>(listener));
+
+      // 3. 获得电厂ID
+      // User user = request.getClientInfo().getUser();
+      // int plantId = ((PlantUser) user).getPlantId();
+      int plantId = 1;
+
+      Transportor.Builder build = TransportorHelper.getTransportor(request)
+         .toBuilder().setTransportId(requestId);
+      channels.find(plantId).writeAndFlush(build.build());
+   }
+
+   public void processResponse(String requestId, String entity) {
+      RequestHolder<Response> holder = handlers.remove(requestId);
+      holder.listener().onResponse(entity);
+   }
+
+   public void start(Settings settings) throws SettingsException {
       NioEventLoopGroup boosGroup = new NioEventLoopGroup(1);
       NioEventLoopGroup workGroup = new NioEventLoopGroup();
 
@@ -57,7 +108,7 @@ public class NettyServerTransport {
       }
 
       bootstrap.handler(new ParentChannelInitializer()).childHandler(
-         new ChildChannelInitializer());
+         new ChildChannelInitializer(this));
 
       String host = settings.get("comm.server.host");
       int port = settings.getAsInt("comm.server.port", 52400);
@@ -75,7 +126,7 @@ public class NettyServerTransport {
       }
    }
 
-   private static class ParentChannelInitializer extends
+   private class ParentChannelInitializer extends
       ChannelInitializer<ServerSocketChannel> {
       @Override
       protected void initChannel(ServerSocketChannel channel) throws Exception {
@@ -84,8 +135,14 @@ public class NettyServerTransport {
       }
    }
 
-   private static class ChildChannelInitializer extends
+   private class ChildChannelInitializer extends
       ChannelInitializer<SocketChannel> {
+      private NettyServerTransport transport;
+
+      ChildChannelInitializer(NettyServerTransport transport) {
+         this.transport = transport;
+      }
+
       @Override
       protected void initChannel(SocketChannel channel) throws Exception {
          ChannelPipeline pipeline = channel.pipeline();
@@ -95,7 +152,72 @@ public class NettyServerTransport {
          pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
          pipeline.addLast(new ProtobufEncoder());
          pipeline.addLast(new HeartbeatResponseHandler());
-         pipeline.addLast(new TranspondServerHandler());
+         pipeline.addLast(new TransportMessageHandler(transport));
+      }
+   }
+
+   private class ChildChannelGroup extends DefaultChannelGroup {
+      public ChildChannelGroup(EventExecutor executor) {
+         super(executor);
+      }
+
+      private final ConcurrentMap<Integer, ChannelId> mapping = PlatformDependent
+         .newConcurrentHashMap();
+
+      @Override
+      @Deprecated
+      public boolean add(Channel channel) {
+         throw new UnsupportedOperationException(
+            "use add(plantId, channel) instead");
+      }
+
+      public boolean add(int plantId, Channel channel) {
+         boolean added = super.add(channel);
+
+         if(added) {
+            mapping.put(plantId, channel.id());
+         }
+
+         return added;
+      }
+
+      @Override
+      public boolean remove(Object obj) {
+         Set<Integer> keys = mapping.keySet();
+
+         if(obj instanceof ChannelId) {
+            for(Integer key : keys) {
+               if(((ChannelId) obj).equals(mapping.get(key))) {
+                  mapping.remove(key);
+               }
+            }
+         }
+         else if(obj instanceof Channel) {
+            for(Integer key : keys) {
+               if(((Channel) obj).id().equals(mapping.get(key))) {
+                  mapping.remove(key);
+               }
+            }
+         }
+
+         return super.remove(obj);
+      }
+
+      public Channel find(int plantId) {
+         ChannelId channelId = mapping.get(plantId);
+         return super.find(channelId);
+      }
+   }
+
+   private class RequestHolder<T extends Response> {
+      private Listener<T> listener;
+
+      RequestHolder(Listener<T> listener) {
+         this.listener = listener;
+      }
+
+      public Listener<T> listener() {
+         return listener;
       }
    }
 }
