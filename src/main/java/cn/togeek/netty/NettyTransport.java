@@ -1,5 +1,23 @@
 package cn.togeek.netty;
 
+import java.net.InetSocketAddress;
+import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
+
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.engine.util.StringUtils;
+
+import cn.garden.util.UUIDUtil;
+import cn.togeek.netty.handler.HeartbeatRequestHandler;
+import cn.togeek.netty.handler.HeartbeatResponseHandler;
+import cn.togeek.netty.handler.TransportMessageHandler;
+import cn.togeek.netty.handler.UptimeClientHandler;
+import cn.togeek.netty.helper.TransportorHelper;
+import cn.togeek.netty.message.Listener;
+import cn.togeek.netty.message.Transport;
+import cn.togeek.netty.message.Transport.Transportor;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -23,26 +41,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.EventExecutor;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import io.netty.util.internal.PlatformDependent;
-
-import java.net.InetSocketAddress;
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
-
-import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.engine.util.StringUtils;
-
-import cn.garden.util.UUIDUtil;
-
-import cn.togeek.netty.handler.HeartbeatRequestHandler;
-import cn.togeek.netty.handler.HeartbeatResponseHandler;
-import cn.togeek.netty.handler.TransportMessageHandler;
-import cn.togeek.netty.handler.UptimeClientHandler;
-import cn.togeek.netty.helper.TransportorHelper;
-import cn.togeek.netty.message.Listener;
-import cn.togeek.netty.message.Transport;
-import cn.togeek.netty.message.Transport.Transportor;
 
 public class NettyTransport {
    public static void main(String[] args) throws Exception {
@@ -81,8 +79,8 @@ public class NettyTransport {
       // int plantId = ((PlantUser) user).getPlantId();
       int plantId = 1;
 
-      Transportor transportor = TransportorHelper.getRequestTransportor(
-         requestId, request);
+      Transportor transportor = TransportorHelper
+         .getRequestTransportor(requestId, request);
       channels.find(plantId).writeAndFlush(transportor);
    }
 
@@ -95,8 +93,8 @@ public class NettyTransport {
       NioEventLoopGroup boosGroup = new NioEventLoopGroup(1);
       NioEventLoopGroup workGroup = new NioEventLoopGroup();
 
-      ServerBootstrap bootstrap = new ServerBootstrap().group(boosGroup,
-         workGroup).channel(NioServerSocketChannel.class);
+      ServerBootstrap bootstrap = new ServerBootstrap()
+         .group(boosGroup, workGroup).channel(NioServerSocketChannel.class);
 
       boolean tcpNoDelay = settings.getAsBoolean("TCP_NODELAY", false);
       boolean tcpKeepAlive = settings.getAsBoolean("SO_KEEPALIVE", false);
@@ -124,8 +122,8 @@ public class NettyTransport {
             settings.getAsInt("SO_BACKLOG", 50));
       }
 
-      bootstrap.handler(new ServerParentChannelInitializer()).childHandler(
-         new ServerChildChannelInitializer(this));
+      bootstrap.handler(new ServerParentChannelInitializer())
+         .childHandler(new ServerChildChannelInitializer(this));
 
       String host = settings.get("comm.server.host");
       int port = settings.getAsInt("comm.server.port", 52400);
@@ -155,8 +153,8 @@ public class NettyTransport {
             .closeFuture().sync();
       }
       catch(Exception e) {
-         throw new RuntimeException("Failed to connect to [" + host + ", "
-            + port + "]", e);
+         throw new RuntimeException(
+            "Failed to connect to [" + host + ", " + port + "]", e);
       }
       finally {
          workGroup.shutdownGracefully();
@@ -178,8 +176,8 @@ public class NettyTransport {
    private Bootstrap clientBootstrap(Settings settings,
       NioEventLoopGroup workGroup) throws SettingsException
    {
-      Bootstrap bootstrap = new Bootstrap().group(workGroup).channel(
-         NioSocketChannel.class);
+      Bootstrap bootstrap = new Bootstrap().group(workGroup)
+         .channel(NioSocketChannel.class);
 
       boolean tcpNoDelay = settings.getAsBoolean("TCP_NODELAY", false);
       boolean tcpKeepAlive = settings.getAsBoolean("SO_KEEPALIVE", false);
@@ -212,8 +210,8 @@ public class NettyTransport {
       return bootstrap;
    }
 
-   private class ServerParentChannelInitializer extends
-      ChannelInitializer<ServerSocketChannel> {
+   private class ServerParentChannelInitializer
+      extends ChannelInitializer<ServerSocketChannel> {
       @Override
       protected void initChannel(ServerSocketChannel channel) throws Exception {
          ChannelPipeline pipeline = channel.pipeline();
@@ -221,8 +219,8 @@ public class NettyTransport {
       }
    }
 
-   private class ServerChildChannelInitializer extends
-      ChannelInitializer<SocketChannel> {
+   private class ServerChildChannelInitializer
+      extends ChannelInitializer<SocketChannel> {
       private NettyTransport transport;
 
       ServerChildChannelInitializer(NettyTransport transport) {
@@ -233,8 +231,8 @@ public class NettyTransport {
       protected void initChannel(SocketChannel channel) throws Exception {
          ChannelPipeline pipeline = channel.pipeline();
          pipeline.addLast(new ProtobufVarint32FrameDecoder());
-         pipeline.addLast(new ProtobufDecoder(Transport.Transportor
-            .getDefaultInstance()));
+         pipeline.addLast(
+            new ProtobufDecoder(Transport.Transportor.getDefaultInstance()));
          pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
          pipeline.addLast(new ProtobufEncoder());
          pipeline.addLast(new HeartbeatResponseHandler());
@@ -307,8 +305,8 @@ public class NettyTransport {
       }
    }
 
-   private class ClientChildChannelInitializer extends
-      ChannelInitializer<SocketChannel> {
+   private class ClientChildChannelInitializer
+      extends ChannelInitializer<SocketChannel> {
       private NettyTransport transport;
 
       ClientChildChannelInitializer(NettyTransport transport) {
@@ -319,8 +317,8 @@ public class NettyTransport {
       protected void initChannel(SocketChannel channel) throws Exception {
          ChannelPipeline pipeline = channel.pipeline();
          pipeline.addLast(new ProtobufVarint32FrameDecoder());
-         pipeline.addLast(new ProtobufDecoder(Transport.Transportor
-            .getDefaultInstance()));
+         pipeline.addLast(
+            new ProtobufDecoder(Transport.Transportor.getDefaultInstance()));
          pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
          pipeline.addLast(new ProtobufEncoder());
          pipeline.addLast(new IdleStateHandler(60, 0, 0));

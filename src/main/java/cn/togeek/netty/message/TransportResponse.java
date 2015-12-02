@@ -5,6 +5,9 @@ public class TransportResponse {
 
    private String payload;
 
+   public TransportResponse() {
+   }
+
    public TransportResponse(String responseId) {
       this.responseId = responseId;
    }

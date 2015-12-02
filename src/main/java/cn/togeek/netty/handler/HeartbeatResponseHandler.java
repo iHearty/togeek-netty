@@ -1,10 +1,9 @@
 package cn.togeek.netty.handler;
 
-import io.netty.channel.ChannelHandlerAdapter;
-import io.netty.channel.ChannelHandlerContext;
-
 import cn.togeek.netty.helper.TransportorHelper;
 import cn.togeek.netty.message.Heartbeat;
+import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.ChannelHandlerContext;
 
 public class HeartbeatResponseHandler extends ChannelHandlerAdapter {
    @Override
@@ -14,8 +13,8 @@ public class HeartbeatResponseHandler extends ChannelHandlerAdapter {
       if((msg instanceof Heartbeat)
          && ((Heartbeat) msg).getType() == Heartbeat.HEARTBEAT_REQ)
       {
-         ctx.writeAndFlush(TransportorHelper
-            .getTransportor(Heartbeat.HEARTBEAT_RES));
+         ctx.writeAndFlush(
+            TransportorHelper.getTransportor(Heartbeat.HEARTBEAT_RES));
          return;
       }
 

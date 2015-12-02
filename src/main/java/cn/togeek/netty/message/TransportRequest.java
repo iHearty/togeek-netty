@@ -9,6 +9,9 @@ public class TransportRequest {
 
    private String payload;
 
+   public TransportRequest() {
+   }
+
    public TransportRequest(String requestId) {
       this.requestId = requestId;
    }
