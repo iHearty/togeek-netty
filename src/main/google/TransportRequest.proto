@@ -4,22 +4,7 @@ option optimize_for = SPEED;
 option java_package = "cn.togeek.netty.message";
 option java_outer_classname = "Transport";
 
-enum TransportType {
-   CHANNEL_INIT = 1;
-   HEARTBEAT_REQ = 2;
-   HEARTBEAT_RES = 3;
-   DDX_REQ = 4;
-   DDX_RES = 5;
-}
-
-message Entity {
-   optional string url = 1;
-   optional string method = 2;
-   optional string payload = 3;
-}
-
 message Transportor {
-   optional string transport_id = 1;
-   optional TransportType type = 2 [default = DDX_REQ];
-   optional Entity entity = 3;
+   optional string clazz = 1;
+   optional string json = 2;
 }

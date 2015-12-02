@@ -5,30 +5,28 @@ import java.util.List;
 import org.restlet.Request;
 import org.restlet.data.Form;
 import org.restlet.data.Reference;
+import org.restlet.engine.util.StringUtils;
 import org.restlet.representation.Representation;
 
-import cn.togeek.netty.message.Transport.Entity;
-import cn.togeek.netty.message.Transport.TransportType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import cn.togeek.netty.message.Transport.Transportor;
+import cn.togeek.netty.message.TransportRequest;
 
 public class TransportorHelper {
-   public static Transportor getInitTransportor() {
-      Entity.Builder ebuilder = Entity.newBuilder();
-      Entity entity = ebuilder.setPayload(1 + "").build();
+   private static ObjectMapper jm = new ObjectMapper();
+
+   public static Transportor getTransportor(Object obj) throws Exception {
       Transportor.Builder tbuilder = Transportor.newBuilder();
-      tbuilder.setType(TransportType.CHANNEL_INIT).setEntity(entity);
+      tbuilder.setClazz(obj.getClass().getName()).setJson(
+         jm.writeValueAsString(obj));
 
       return tbuilder.build();
    }
 
-   public static Transportor getTransportor(TransportType type) {
-      Transportor.Builder tbuilder = Transportor.newBuilder();
-      tbuilder.setType(type);
-
-      return tbuilder.build();
-   }
-
-   public static Transportor getTransportor(Request request) throws Exception {
+   public static Transportor getRequestTransportor(String rid, Request request)
+      throws Exception
+   {
       // 是否代理给python服务处理
       Form form = request.getResourceRef().getQueryAsForm();
       boolean proxy = "true".equals(form.getFirstValue("proxy"));
@@ -55,27 +53,20 @@ public class TransportorHelper {
          ref.setHostPort(52500);
       }
 
-      ref.setHostDomain("192.168.0.95");
+      ref.setHostDomain("127.0.0.1");
       ref.setQuery(form.getQueryString());
 
-      return getTransportor(TransportType.DDX_REQ, ref.toString(), request
-         .getMethod().getName(), request.getEntity());
-   }
+      TransportRequest req = new TransportRequest(rid);
+      req.setUrl(ref.toString());
+      req.setMethod(request.getMethod().getName());
+      Representation msg = request.getEntity();
 
-   public static Transportor getTransportor(TransportType type, String url,
-      String method, Representation msg) throws Exception
-   {
-      Entity.Builder ebuilder = Entity.newBuilder();
-      ebuilder.setUrl(url).setMethod(method);
+      String text = msg.getText();
 
-      if(msg != null && msg.getText() != null) {
-         ebuilder.setPayload(msg.getText());
+      if(!StringUtils.isNullOrEmpty(text)) {
+         req.setPayload(text);
       }
 
-      Entity entity = ebuilder.build();
-      Transportor.Builder tbuilder = Transportor.newBuilder();
-      tbuilder.setType(type).setEntity(entity);
-
-      return tbuilder.build();
+      return getTransportor(req);
    }
 }

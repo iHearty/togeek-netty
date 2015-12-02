@@ -1,23 +1,5 @@
 package cn.togeek.netty;
 
-import java.net.InetSocketAddress;
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
-
-import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.engine.util.StringUtils;
-
-import cn.garden.util.UUIDUtil;
-import cn.togeek.netty.handler.HeartbeatRequestHandler;
-import cn.togeek.netty.handler.HeartbeatResponseHandler;
-import cn.togeek.netty.handler.TransportMessageHandler;
-import cn.togeek.netty.handler.UptimeClientHandler;
-import cn.togeek.netty.helper.TransportorHelper;
-import cn.togeek.netty.message.Listener;
-import cn.togeek.netty.message.Transport;
-import cn.togeek.netty.message.Transport.Transportor;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -42,12 +24,32 @@ import io.netty.util.concurrent.EventExecutor;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import io.netty.util.internal.PlatformDependent;
 
+import java.net.InetSocketAddress;
+import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
+
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.engine.util.StringUtils;
+
+import cn.garden.util.UUIDUtil;
+
+import cn.togeek.netty.handler.HeartbeatRequestHandler;
+import cn.togeek.netty.handler.HeartbeatResponseHandler;
+import cn.togeek.netty.handler.TransportMessageHandler;
+import cn.togeek.netty.handler.UptimeClientHandler;
+import cn.togeek.netty.helper.TransportorHelper;
+import cn.togeek.netty.message.Listener;
+import cn.togeek.netty.message.Transport;
+import cn.togeek.netty.message.Transport.Transportor;
+
 public class NettyTransport {
    public static void main(String[] args) throws Exception {
       Settings settings = Settings.builder().put("comm.server.host", "0.0.0.0")
-         .put("comm.server.port", 52400).put("comm.this.plantid", 1).put(
-            "TCP_NODELAY", true).put("SO_KEEPALIVE", true).put("SO_BACKLOG",
-               100).build();
+         .put("comm.server.port", 52400).put("comm.this.plantid", 1)
+         .put("TCP_NODELAY", true).put("SO_KEEPALIVE", true)
+         .put("SO_BACKLOG", 100).build();
       new NettyTransport().startClient(settings);
    }
 
@@ -66,7 +68,8 @@ public class NettyTransport {
    }
 
    public void sendRequest(Request request, Listener<Response> listener)
-      throws Exception {
+      throws Exception
+   {
       // 1. 生成request id
       String requestId = UUIDUtil.getUUID();
 
@@ -78,9 +81,9 @@ public class NettyTransport {
       // int plantId = ((PlantUser) user).getPlantId();
       int plantId = 1;
 
-      Transportor.Builder build = TransportorHelper.getTransportor(request)
-         .toBuilder().setTransportId(requestId);
-      channels.find(plantId).writeAndFlush(build.build());
+      Transportor transportor = TransportorHelper.getRequestTransportor(
+         requestId, request);
+      channels.find(plantId).writeAndFlush(transportor);
    }
 
    public void processResponse(String requestId, String entity) {
@@ -107,18 +110,18 @@ public class NettyTransport {
       }
 
       if(!StringUtils.isNullOrEmpty(settings.get("SO_SNDBUF"))) {
-         bootstrap.option(ChannelOption.SO_SNDBUF, settings.getAsInt(
-            "SO_SNDBUF", 8192));
+         bootstrap.option(ChannelOption.SO_SNDBUF,
+            settings.getAsInt("SO_SNDBUF", 8192));
       }
 
       if(!StringUtils.isNullOrEmpty(settings.get("SO_RCVBUF"))) {
-         bootstrap.option(ChannelOption.SO_RCVBUF, settings.getAsInt(
-            "SO_RCVBUF", 8192));
+         bootstrap.option(ChannelOption.SO_RCVBUF,
+            settings.getAsInt("SO_RCVBUF", 8192));
       }
 
       if(!StringUtils.isNullOrEmpty(settings.get("SO_BACKLOG"))) {
-         bootstrap.option(ChannelOption.SO_BACKLOG, settings.getAsInt(
-            "SO_BACKLOG", 50));
+         bootstrap.option(ChannelOption.SO_BACKLOG,
+            settings.getAsInt("SO_BACKLOG", 50));
       }
 
       bootstrap.handler(new ServerParentChannelInitializer()).childHandler(
@@ -147,8 +150,9 @@ public class NettyTransport {
       NioEventLoopGroup workGroup = new NioEventLoopGroup();
 
       try {
-         clientBootstrap(settings, workGroup).connect(new InetSocketAddress(host,
-            port)).sync().channel().closeFuture().sync();
+         clientBootstrap(settings, workGroup)
+            .connect(new InetSocketAddress(host, port)).sync().channel()
+            .closeFuture().sync();
       }
       catch(Exception e) {
          throw new RuntimeException("Failed to connect to [" + host + ", "
@@ -171,8 +175,9 @@ public class NettyTransport {
       }
    }
 
-   private Bootstrap clientBootstrap(Settings settings, NioEventLoopGroup workGroup)
-      throws SettingsException {
+   private Bootstrap clientBootstrap(Settings settings,
+      NioEventLoopGroup workGroup) throws SettingsException
+   {
       Bootstrap bootstrap = new Bootstrap().group(workGroup).channel(
          NioSocketChannel.class);
 
@@ -188,18 +193,18 @@ public class NettyTransport {
       }
 
       if(!StringUtils.isNullOrEmpty(settings.get("SO_SNDBUF"))) {
-         bootstrap.option(ChannelOption.SO_SNDBUF, settings.getAsInt(
-            "SO_SNDBUF", 8192));
+         bootstrap.option(ChannelOption.SO_SNDBUF,
+            settings.getAsInt("SO_SNDBUF", 8192));
       }
 
       if(!StringUtils.isNullOrEmpty(settings.get("SO_RCVBUF"))) {
-         bootstrap.option(ChannelOption.SO_RCVBUF, settings.getAsInt(
-            "SO_RCVBUF", 8192));
+         bootstrap.option(ChannelOption.SO_RCVBUF,
+            settings.getAsInt("SO_RCVBUF", 8192));
       }
 
       if(!StringUtils.isNullOrEmpty(settings.get("SO_BACKLOG"))) {
-         bootstrap.option(ChannelOption.SO_BACKLOG, settings.getAsInt(
-            "SO_BACKLOG", 50));
+         bootstrap.option(ChannelOption.SO_BACKLOG,
+            settings.getAsInt("SO_BACKLOG", 50));
       }
 
       bootstrap.handler(new ClientChildChannelInitializer(this));
