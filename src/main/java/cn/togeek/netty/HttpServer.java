@@ -25,7 +25,7 @@ public class HttpServer {
             "TCP_NODELAY", true).put("SO_KEEPALIVE", true).put("SO_BACKLOG",
                100).build();
 
-      NettyServerTransport transport = new NettyServerTransport();
+      NettyTransport transport = new NettyTransport();
 
       Component component = new Component();
       component.getServers().add(Protocol.HTTP, 9009);
@@ -34,13 +34,13 @@ public class HttpServer {
       component.getDefaultHost().attach("/http", server);
       component.start();
 
-      transport.start(settings);
+      transport.startServer(settings);
    }
 
    public static class ServerApplication extends Application {
-      private NettyServerTransport transport;
+      private NettyTransport transport;
 
-      ServerApplication(NettyServerTransport transport) {
+      ServerApplication(NettyTransport transport) {
          this.transport = transport;
       }
 
