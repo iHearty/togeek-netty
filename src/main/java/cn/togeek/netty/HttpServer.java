@@ -26,7 +26,9 @@ public class HttpServer {
       component.start();
 
       Settings settings = Settings.builder().put("comm.server.host", "0.0.0.0")
-         .put("comm.server.port", 52400).put("comm.this.plantid", 1).build();
+         .put("comm.server.port", 52400).put("comm.this.plantid", 1).put(
+            "TCP_NODELAY", true).put("SO_KEEPALIVE", true).put("SO_BACKLOG",
+               100).build();
 
       NettyServerTransport.start(settings);
    }
