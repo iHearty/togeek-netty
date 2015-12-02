@@ -20,9 +20,7 @@ public class HeartbeatRequestHandler extends ChannelHandlerAdapter {
    public void channelRead(ChannelHandlerContext ctx, Object msg)
       throws Exception
    {
-      if((msg instanceof Heartbeat)
-         && ((Heartbeat) msg).getType() == Heartbeat.HEARTBEAT_RES)
-      {
+      if(Heartbeat.RES.equals(msg)) {
          ctx.executor().schedule(new HeartbeatTask(ctx), 3, TimeUnit.SECONDS);
          return;
       }
