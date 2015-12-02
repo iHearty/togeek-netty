@@ -13,6 +13,7 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.routing.Router;
 
 import cn.togeek.netty.message.Listener;
+import cn.togeek.netty.server.ServerTransportService;
 
 public class HttpServer {
    public static void main(String[] args) throws Exception {
@@ -34,7 +35,7 @@ public class HttpServer {
       component.getDefaultHost().attach("/http", server);
       component.start();
 
-      transport.startServer(settings);
+      ServerTransportService.INSTANCE.startService(settings);
    }
 
    public static class ServerApplication extends Application {
