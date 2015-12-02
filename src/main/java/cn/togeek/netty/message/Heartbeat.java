@@ -1,6 +1,5 @@
 package cn.togeek.netty.message;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Heartbeat {
    public static final int HEARTBEAT_REQ = 1;

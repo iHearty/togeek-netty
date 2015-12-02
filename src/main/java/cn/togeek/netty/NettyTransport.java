@@ -35,6 +35,7 @@ import org.restlet.engine.util.StringUtils;
 
 import cn.garden.util.UUIDUtil;
 
+import cn.togeek.netty.codec.Protobuf2ObjectDecoder;
 import cn.togeek.netty.handler.HeartbeatRequestHandler;
 import cn.togeek.netty.handler.HeartbeatResponseHandler;
 import cn.togeek.netty.handler.TransportMessageHandler;
@@ -233,7 +234,7 @@ public class NettyTransport {
       protected void initChannel(SocketChannel channel) throws Exception {
          ChannelPipeline pipeline = channel.pipeline();
          pipeline.addLast(new ProtobufVarint32FrameDecoder());
-         pipeline.addLast(new ProtobufDecoder(Transport.Transportor
+         pipeline.addLast(new Protobuf2ObjectDecoder(Transport.Transportor
             .getDefaultInstance()));
          pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
          pipeline.addLast(new ProtobufEncoder());
@@ -319,7 +320,7 @@ public class NettyTransport {
       protected void initChannel(SocketChannel channel) throws Exception {
          ChannelPipeline pipeline = channel.pipeline();
          pipeline.addLast(new ProtobufVarint32FrameDecoder());
-         pipeline.addLast(new ProtobufDecoder(Transport.Transportor
+         pipeline.addLast(new Protobuf2ObjectDecoder(Transport.Transportor
             .getDefaultInstance()));
          pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
          pipeline.addLast(new ProtobufEncoder());
