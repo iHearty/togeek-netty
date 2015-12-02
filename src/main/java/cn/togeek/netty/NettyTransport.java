@@ -10,6 +10,7 @@ import org.restlet.Response;
 import org.restlet.engine.util.StringUtils;
 
 import cn.garden.util.UUIDUtil;
+import cn.togeek.netty.codec.Protobuf2ObjectDecoder;
 import cn.togeek.netty.handler.HeartbeatRequestHandler;
 import cn.togeek.netty.handler.HeartbeatResponseHandler;
 import cn.togeek.netty.handler.TransportMessageHandler;
@@ -31,7 +32,6 @@ import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
@@ -231,8 +231,8 @@ public class NettyTransport {
       protected void initChannel(SocketChannel channel) throws Exception {
          ChannelPipeline pipeline = channel.pipeline();
          pipeline.addLast(new ProtobufVarint32FrameDecoder());
-         pipeline.addLast(
-            new ProtobufDecoder(Transport.Transportor.getDefaultInstance()));
+         pipeline.addLast(new Protobuf2ObjectDecoder(
+            Transport.Transportor.getDefaultInstance()));
          pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
          pipeline.addLast(new ProtobufEncoder());
          pipeline.addLast(new HeartbeatResponseHandler());
@@ -317,8 +317,8 @@ public class NettyTransport {
       protected void initChannel(SocketChannel channel) throws Exception {
          ChannelPipeline pipeline = channel.pipeline();
          pipeline.addLast(new ProtobufVarint32FrameDecoder());
-         pipeline.addLast(
-            new ProtobufDecoder(Transport.Transportor.getDefaultInstance()));
+         pipeline.addLast(new Protobuf2ObjectDecoder(
+            Transport.Transportor.getDefaultInstance()));
          pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
          pipeline.addLast(new ProtobufEncoder());
          pipeline.addLast(new IdleStateHandler(60, 0, 0));
