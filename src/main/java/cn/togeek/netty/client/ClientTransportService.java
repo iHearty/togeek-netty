@@ -24,12 +24,11 @@ public class ClientTransportService
 
    private ClientTransportService() {
       super();
-
-      this.bootstrap = new Bootstrap();
    }
 
    @Override
    protected void init(Settings settings) throws SettingsException {
+      this.bootstrap = new Bootstrap();
       workGroup = new NioEventLoopGroup();
       options(settings).group(workGroup).channel(NioSocketChannel.class)
          .handler(new ClientInitializer(transport));
@@ -37,6 +36,8 @@ public class ClientTransportService
 
    @Override
    public void start(final Settings settings) throws Exception {
+      init(settings);
+      
       String host = settings.get("comm.server.host");
       int port = settings.getAsInt("comm.server.port", 52400);
 
@@ -61,7 +62,7 @@ public class ClientTransportService
                   e.printStackTrace();
                }
             }
-         }, 60, TimeUnit.SECONDS);
+         }, 30, TimeUnit.SECONDS);
       }
    }
 }

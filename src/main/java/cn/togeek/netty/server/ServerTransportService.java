@@ -21,12 +21,11 @@ public class ServerTransportService
 
    private ServerTransportService() {
       super();
-
-      this.bootstrap = new ServerBootstrap();
    }
 
    @Override
    protected void init(Settings settings) throws SettingsException {
+      this.bootstrap = new ServerBootstrap();
       boosGroup = new NioEventLoopGroup(1);
       workGroup = new NioEventLoopGroup();
       options(settings).group(boosGroup, workGroup)
