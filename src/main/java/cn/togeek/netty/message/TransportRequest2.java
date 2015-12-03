@@ -1,6 +1,6 @@
 package cn.togeek.netty.message;
 
-public class TransportRequest {
+public class TransportRequest2 {
    private String requestId;
 
    private String url;
@@ -9,10 +9,10 @@ public class TransportRequest {
 
    private String payload;
 
-   public TransportRequest() {
+   public TransportRequest2() {
    }
 
-   public TransportRequest(String requestId) {
+   public TransportRequest2(String requestId) {
       this.requestId = requestId;
    }
 

@@ -11,7 +11,7 @@ import org.restlet.representation.Representation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.togeek.netty.message.Transport.Transportor;
-import cn.togeek.netty.message.TransportRequest;
+import cn.togeek.netty.message.TransportRequest2;
 
 public class TransportorHelper {
    private static ObjectMapper jm = new ObjectMapper();
@@ -56,7 +56,7 @@ public class TransportorHelper {
       ref.setHostDomain("127.0.0.1");
       ref.setQuery(form.getQueryString());
 
-      TransportRequest req = new TransportRequest(rid);
+      TransportRequest2 req = new TransportRequest2(rid);
       req.setUrl(ref.toString().replace("server", "client"));
       req.setMethod(request.getMethod().getName());
       Representation msg = request.getEntity();

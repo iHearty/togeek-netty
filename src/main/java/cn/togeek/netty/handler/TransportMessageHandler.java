@@ -14,8 +14,8 @@ import cn.garden.util.Tool;
 import cn.togeek.netty.NettyTransport;
 import cn.togeek.netty.helper.TransportorHelper;
 import cn.togeek.netty.message.Initializer;
-import cn.togeek.netty.message.TransportRequest;
-import cn.togeek.netty.message.TransportResponse;
+import cn.togeek.netty.message.TransportRequest2;
+import cn.togeek.netty.message.TransportResponse2;
 
 public class TransportMessageHandler extends ChannelHandlerAdapter {
    private NettyTransport transport = NettyTransport.INSTANCE;
@@ -30,8 +30,8 @@ public class TransportMessageHandler extends ChannelHandlerAdapter {
          return;
       }
 System.out.println("TransportMessageHandler -> " + msg);
-      if(msg instanceof TransportRequest) {
-         TransportRequest request = (TransportRequest) msg;
+      if(msg instanceof TransportRequest2) {
+         TransportRequest2 request = (TransportRequest2) msg;
          final Context context = new Context();
          context.getParameters().add("readTimeout", "180000");
          String url = request.getUrl();
@@ -59,8 +59,8 @@ System.out.println("TransportMessageHandler -> " + msg);
          }
 
          try {
-            TransportResponse response =
-               new TransportResponse(request.getRequestId());
+            TransportResponse2 response =
+               new TransportResponse2(request.getRequestId());
             String text = rep.getText();
             text = text == null ? "" : text;
             response.setPayload(text);
@@ -71,8 +71,8 @@ System.out.println("TransportMessageHandler -> " + msg);
          }
       }
 
-      if(msg instanceof TransportResponse) {
-         TransportResponse response = (TransportResponse) msg;
+      if(msg instanceof TransportResponse2) {
+         TransportResponse2 response = (TransportResponse2) msg;
          transport.processResponse(response.getResponseId(),
             response.getPayload());
 

@@ -1,14 +1,14 @@
 package cn.togeek.netty.message;
 
-public class TransportResponse {
+public class TransportResponse2 {
    private String responseId;
 
    private String payload;
 
-   public TransportResponse() {
+   public TransportResponse2() {
    }
 
-   public TransportResponse(String responseId) {
+   public TransportResponse2(String responseId) {
       this.responseId = responseId;
    }
 
