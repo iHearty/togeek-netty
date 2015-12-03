@@ -1,0 +1,12 @@
+package cn.togeek.netty.proto;
+
+option optimize_for = SPEED;
+option java_package = "cn.togeek.netty.rpc";
+option java_outer_classname = "RpcProtos";
+
+message Rpc {
+   required string id = 1;
+   optional int32 type = 2;
+   optional string action = 3;
+   optional bytes message = 4;
+}
