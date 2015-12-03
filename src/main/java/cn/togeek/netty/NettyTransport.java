@@ -29,13 +29,19 @@ public class NettyTransport {
             .put("SO_BACKLOG", 100).build();
       ClientTransportService.INSTANCE.start(settings);
    }
-
+   
+   public static final NettyTransport INSTANCE = new NettyTransport();
+   
    private final ChildChannelGroup channels = new ChildChannelGroup(
       GlobalEventExecutor.INSTANCE);
 
    private final ConcurrentMap<String, RequestHolder<Response>> holders =
       PlatformDependent.newConcurrentHashMap();
-
+   
+   private NettyTransport() {
+      
+   }
+   
    public void addChildChannel(int plantId, Channel channel) {
       channels.add(plantId, channel);
    }
@@ -117,6 +123,7 @@ public class NettyTransport {
 
       public Channel find(int plantId) {
          ChannelId channelId = mapping.get(plantId);
+         System.out.println(plantId + " -->> " + channelId + " " + System.identityHashCode(this));
          return super.find(channelId);
       }
    }

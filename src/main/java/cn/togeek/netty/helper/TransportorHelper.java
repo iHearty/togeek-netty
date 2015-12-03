@@ -57,7 +57,7 @@ public class TransportorHelper {
       ref.setQuery(form.getQueryString());
 
       TransportRequest req = new TransportRequest(rid);
-      req.setUrl(ref.toString());
+      req.setUrl(ref.toString().replace("server", "client"));
       req.setMethod(request.getMethod().getName());
       Representation msg = request.getEntity();
 

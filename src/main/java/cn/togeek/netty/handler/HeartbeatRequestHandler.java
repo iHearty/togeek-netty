@@ -12,7 +12,7 @@ public class HeartbeatRequestHandler extends ChannelHandlerAdapter {
    @Override
    public void channelActive(ChannelHandlerContext ctx) throws Exception {
       super.channelActive(ctx);
-
+System.out.println("HeartbeatRequestHandler -> " + System.identityHashCode(ctx.channel()));
       ctx.writeAndFlush(TransportorHelper.getTransportor(Heartbeat.REQ));
    }
 

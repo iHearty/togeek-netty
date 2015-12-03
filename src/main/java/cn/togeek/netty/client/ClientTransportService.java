@@ -31,7 +31,7 @@ public class ClientTransportService extends AbstractTransportService<Bootstrap> 
 
       workGroup = new NioEventLoopGroup();
       options(settings).group(workGroup).channel(NioSocketChannel.class)
-         .handler(new ClientInitializer(transport));
+         .handler(new ClientInitializer());
    }
 
    @Override

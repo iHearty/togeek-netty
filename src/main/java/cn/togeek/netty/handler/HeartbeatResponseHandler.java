@@ -11,6 +11,7 @@ public class HeartbeatResponseHandler extends ChannelHandlerAdapter {
    public void channelRead(ChannelHandlerContext ctx, Object msg)
       throws Exception
    {
+      System.out.println("HeartbeatResponseHandler -> " + msg);
       if(Heartbeat.REQ.equals(msg)) {
          ctx.writeAndFlush(TransportorHelper.getTransportor(Heartbeat.RES));
          return;

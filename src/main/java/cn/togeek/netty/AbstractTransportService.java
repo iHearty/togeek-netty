@@ -8,14 +8,7 @@ import io.netty.channel.ChannelOption;
 
 public abstract class AbstractTransportService<T extends AbstractBootstrap<T, ? extends Channel>> {
    protected T bootstrap;
-
-   protected NettyTransport transport;
-
    protected abstract void init(Settings settings) throws SettingsException;
-
-   protected AbstractTransportService() {
-      this.transport = new NettyTransport();
-   }
 
    protected T options(Settings settings) throws SettingsException {
       boolean tcpNoDelay = settings.getAsBoolean("TCP_NODELAY", false);

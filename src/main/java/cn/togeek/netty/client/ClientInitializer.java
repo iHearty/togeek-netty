@@ -8,7 +8,6 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
 
-import cn.togeek.netty.NettyTransport;
 import cn.togeek.netty.codec.Protobuf2ObjectDecoder;
 import cn.togeek.netty.handler.CheckinServerHandler;
 import cn.togeek.netty.handler.HeartbeatRequestHandler;
@@ -17,12 +16,6 @@ import cn.togeek.netty.handler.UptimeClientHandler;
 import cn.togeek.netty.message.Transport;
 
 public class ClientInitializer extends ChannelInitializer<SocketChannel> {
-   private NettyTransport transport;
-
-   ClientInitializer(NettyTransport transport) {
-      this.transport = transport;
-   }
-
    @Override
    protected void initChannel(SocketChannel channel) throws Exception {
       ChannelPipeline pipeline = channel.pipeline();
@@ -35,6 +28,6 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
       pipeline.addLast(new HeartbeatRequestHandler());
       pipeline.addLast(new UptimeClientHandler());
       pipeline.addLast(new CheckinServerHandler());
-      pipeline.addLast(new TransportMessageHandler(transport));
+      pipeline.addLast(new TransportMessageHandler());
    }
 }

@@ -1,13 +1,14 @@
 package cn.togeek.netty.server;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+
 import java.net.InetSocketAddress;
 
 import cn.togeek.netty.AbstractTransportService;
 import cn.togeek.netty.Settings;
 import cn.togeek.netty.SettingsException;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class ServerTransportService extends
    AbstractTransportService<ServerBootstrap> {
@@ -20,7 +21,6 @@ public class ServerTransportService extends
    private NioEventLoopGroup workGroup;
 
    private ServerTransportService() {
-      super();
    }
 
    @Override
@@ -31,7 +31,7 @@ public class ServerTransportService extends
       options(settings).group(boosGroup, workGroup)
          .channel(NioServerSocketChannel.class)
          .handler(new ServerInitializer())
-         .childHandler(new ServerChildInitializer(transport));
+         .childHandler(new ServerChildInitializer());
    }
 
    @Override
