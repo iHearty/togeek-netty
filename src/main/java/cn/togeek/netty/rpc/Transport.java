@@ -3,13 +3,13 @@
 
 package cn.togeek.netty.rpc;
 
-public final class RpcProtos {
-  private RpcProtos() {}
+public final class Transport {
+  private Transport() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface RpcOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:cn.togeek.netty.proto.Rpc)
+  public interface MessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:cn.togeek.netty.proto.Message)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -59,25 +59,25 @@ public final class RpcProtos {
     com.google.protobuf.ByteString getMessage();
   }
   /**
-   * Protobuf type {@code cn.togeek.netty.proto.Rpc}
+   * Protobuf type {@code cn.togeek.netty.proto.Message}
    */
-  public static final class Rpc extends
+  public static final class Message extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:cn.togeek.netty.proto.Rpc)
-      RpcOrBuilder {
-    // Use Rpc.newBuilder() to construct.
-    private Rpc(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:cn.togeek.netty.proto.Message)
+      MessageOrBuilder {
+    // Use Message.newBuilder() to construct.
+    private Message(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private Rpc(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private Message(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final Rpc defaultInstance;
-    public static Rpc getDefaultInstance() {
+    private static final Message defaultInstance;
+    public static Message getDefaultInstance() {
       return defaultInstance;
     }
 
-    public Rpc getDefaultInstanceForType() {
+    public Message getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -87,7 +87,7 @@ public final class RpcProtos {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private Rpc(
+    private Message(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -146,28 +146,28 @@ public final class RpcProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return cn.togeek.netty.rpc.RpcProtos.internal_static_cn_togeek_netty_proto_Rpc_descriptor;
+      return cn.togeek.netty.rpc.Transport.internal_static_cn_togeek_netty_proto_Message_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return cn.togeek.netty.rpc.RpcProtos.internal_static_cn_togeek_netty_proto_Rpc_fieldAccessorTable
+      return cn.togeek.netty.rpc.Transport.internal_static_cn_togeek_netty_proto_Message_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              cn.togeek.netty.rpc.RpcProtos.Rpc.class, cn.togeek.netty.rpc.RpcProtos.Rpc.Builder.class);
+              cn.togeek.netty.rpc.Transport.Message.class, cn.togeek.netty.rpc.Transport.Message.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<Rpc> PARSER =
-        new com.google.protobuf.AbstractParser<Rpc>() {
-      public Rpc parsePartialFrom(
+    public static com.google.protobuf.Parser<Message> PARSER =
+        new com.google.protobuf.AbstractParser<Message>() {
+      public Message parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Rpc(input, extensionRegistry);
+        return new Message(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Rpc> getParserForType() {
+    public com.google.protobuf.Parser<Message> getParserForType() {
       return PARSER;
     }
 
@@ -358,53 +358,53 @@ public final class RpcProtos {
       return super.writeReplace();
     }
 
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseFrom(
+    public static cn.togeek.netty.rpc.Transport.Message parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseFrom(
+    public static cn.togeek.netty.rpc.Transport.Message parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseFrom(byte[] data)
+    public static cn.togeek.netty.rpc.Transport.Message parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseFrom(
+    public static cn.togeek.netty.rpc.Transport.Message parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseFrom(java.io.InputStream input)
+    public static cn.togeek.netty.rpc.Transport.Message parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseFrom(
+    public static cn.togeek.netty.rpc.Transport.Message parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseDelimitedFrom(java.io.InputStream input)
+    public static cn.togeek.netty.rpc.Transport.Message parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseDelimitedFrom(
+    public static cn.togeek.netty.rpc.Transport.Message parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseFrom(
+    public static cn.togeek.netty.rpc.Transport.Message parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static cn.togeek.netty.rpc.RpcProtos.Rpc parseFrom(
+    public static cn.togeek.netty.rpc.Transport.Message parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -413,7 +413,7 @@ public final class RpcProtos {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(cn.togeek.netty.rpc.RpcProtos.Rpc prototype) {
+    public static Builder newBuilder(cn.togeek.netty.rpc.Transport.Message prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -425,25 +425,25 @@ public final class RpcProtos {
       return builder;
     }
     /**
-     * Protobuf type {@code cn.togeek.netty.proto.Rpc}
+     * Protobuf type {@code cn.togeek.netty.proto.Message}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:cn.togeek.netty.proto.Rpc)
-        cn.togeek.netty.rpc.RpcProtos.RpcOrBuilder {
+        // @@protoc_insertion_point(builder_implements:cn.togeek.netty.proto.Message)
+        cn.togeek.netty.rpc.Transport.MessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return cn.togeek.netty.rpc.RpcProtos.internal_static_cn_togeek_netty_proto_Rpc_descriptor;
+        return cn.togeek.netty.rpc.Transport.internal_static_cn_togeek_netty_proto_Message_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return cn.togeek.netty.rpc.RpcProtos.internal_static_cn_togeek_netty_proto_Rpc_fieldAccessorTable
+        return cn.togeek.netty.rpc.Transport.internal_static_cn_togeek_netty_proto_Message_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                cn.togeek.netty.rpc.RpcProtos.Rpc.class, cn.togeek.netty.rpc.RpcProtos.Rpc.Builder.class);
+                cn.togeek.netty.rpc.Transport.Message.class, cn.togeek.netty.rpc.Transport.Message.Builder.class);
       }
 
-      // Construct using cn.togeek.netty.rpc.RpcProtos.Rpc.newBuilder()
+      // Construct using cn.togeek.netty.rpc.Transport.Message.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -480,23 +480,23 @@ public final class RpcProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return cn.togeek.netty.rpc.RpcProtos.internal_static_cn_togeek_netty_proto_Rpc_descriptor;
+        return cn.togeek.netty.rpc.Transport.internal_static_cn_togeek_netty_proto_Message_descriptor;
       }
 
-      public cn.togeek.netty.rpc.RpcProtos.Rpc getDefaultInstanceForType() {
-        return cn.togeek.netty.rpc.RpcProtos.Rpc.getDefaultInstance();
+      public cn.togeek.netty.rpc.Transport.Message getDefaultInstanceForType() {
+        return cn.togeek.netty.rpc.Transport.Message.getDefaultInstance();
       }
 
-      public cn.togeek.netty.rpc.RpcProtos.Rpc build() {
-        cn.togeek.netty.rpc.RpcProtos.Rpc result = buildPartial();
+      public cn.togeek.netty.rpc.Transport.Message build() {
+        cn.togeek.netty.rpc.Transport.Message result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public cn.togeek.netty.rpc.RpcProtos.Rpc buildPartial() {
-        cn.togeek.netty.rpc.RpcProtos.Rpc result = new cn.togeek.netty.rpc.RpcProtos.Rpc(this);
+      public cn.togeek.netty.rpc.Transport.Message buildPartial() {
+        cn.togeek.netty.rpc.Transport.Message result = new cn.togeek.netty.rpc.Transport.Message(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -521,16 +521,16 @@ public final class RpcProtos {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof cn.togeek.netty.rpc.RpcProtos.Rpc) {
-          return mergeFrom((cn.togeek.netty.rpc.RpcProtos.Rpc)other);
+        if (other instanceof cn.togeek.netty.rpc.Transport.Message) {
+          return mergeFrom((cn.togeek.netty.rpc.Transport.Message)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(cn.togeek.netty.rpc.RpcProtos.Rpc other) {
-        if (other == cn.togeek.netty.rpc.RpcProtos.Rpc.getDefaultInstance()) return this;
+      public Builder mergeFrom(cn.togeek.netty.rpc.Transport.Message other) {
+        if (other == cn.togeek.netty.rpc.Transport.Message.getDefaultInstance()) return this;
         if (other.hasId()) {
           bitField0_ |= 0x00000001;
           id_ = other.id_;
@@ -563,11 +563,11 @@ public final class RpcProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        cn.togeek.netty.rpc.RpcProtos.Rpc parsedMessage = null;
+        cn.togeek.netty.rpc.Transport.Message parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (cn.togeek.netty.rpc.RpcProtos.Rpc) e.getUnfinishedMessage();
+          parsedMessage = (cn.togeek.netty.rpc.Transport.Message) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -797,22 +797,22 @@ public final class RpcProtos {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:cn.togeek.netty.proto.Rpc)
+      // @@protoc_insertion_point(builder_scope:cn.togeek.netty.proto.Message)
     }
 
     static {
-      defaultInstance = new Rpc(true);
+      defaultInstance = new Message(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:cn.togeek.netty.proto.Rpc)
+    // @@protoc_insertion_point(class_scope:cn.togeek.netty.proto.Message)
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_cn_togeek_netty_proto_Rpc_descriptor;
+    internal_static_cn_togeek_netty_proto_Message_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_cn_togeek_netty_proto_Rpc_fieldAccessorTable;
+      internal_static_cn_togeek_netty_proto_Message_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -823,9 +823,9 @@ public final class RpcProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\017RpcProtos.proto\022\025cn.togeek.netty.proto" +
-      "\"@\n\003Rpc\022\n\n\002id\030\001 \002(\t\022\014\n\004type\030\002 \001(\005\022\016\n\006act" +
-      "ion\030\003 \001(\t\022\017\n\007message\030\004 \001(\014B\"\n\023cn.togeek." +
-      "netty.rpcB\tRpcProtosH\001"
+      "\"D\n\007Message\022\n\n\002id\030\001 \002(\t\022\014\n\004type\030\002 \001(\005\022\016\n" +
+      "\006action\030\003 \001(\t\022\017\n\007message\030\004 \001(\014B\"\n\023cn.tog" +
+      "eek.netty.rpcB\tTransportH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -839,11 +839,11 @@ public final class RpcProtos {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_cn_togeek_netty_proto_Rpc_descriptor =
+    internal_static_cn_togeek_netty_proto_Message_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_cn_togeek_netty_proto_Rpc_fieldAccessorTable = new
+    internal_static_cn_togeek_netty_proto_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_cn_togeek_netty_proto_Rpc_descriptor,
+        internal_static_cn_togeek_netty_proto_Message_descriptor,
         new java.lang.String[] { "Id", "Type", "Action", "Message", });
   }
 
